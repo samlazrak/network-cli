@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/samlazrak/networkcli/lib"
+	"github.com/samlazrak/cli/lib"
 
 	"github.com/urfave/cli"
 )
