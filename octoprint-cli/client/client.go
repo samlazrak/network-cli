@@ -3,8 +3,17 @@ package client
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 )
+
+func Auth(){
+	key, err := ioutil.ReadFile("authkey.txt")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(key))
+}
 
 func Get(address string) *http.Response {
 	response, err := http.Get(address)

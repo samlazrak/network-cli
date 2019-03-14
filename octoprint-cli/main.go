@@ -1,23 +1,43 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/samlazrak/octoprint-cli/client"
+	"github.com/urfave/cli"
 	"io/ioutil"
+	"log"
+	"os"
 )
 
 func main(){
-	// Get
-	//var resGet = client.Get("https://httpbin.org/get")
-	//data, _ := ioutil.ReadAll(response.Body)
-	//fmt.Printf("data: %T\n", data)
+	app := cli.NewApp()
+	app.Name = "Octoprint Go-Cli"
+	app.Usage = "Control Octoprint and your 3D printer from the command line"
 
-	jsonData := map[string]string{"firstname": "Sam", "lastname": "Raboy"}
-	jsonValue, _ := json.Marshal(jsonData)
-	var resPost = client.Post("https://httpbin.org/post", jsonValue)
-	fmt.Printf("respost: %T\n", resPost)
-	data, _ := ioutil.ReadAll(resPost.Body)
-	fmt.Printf("data: %T\n", data)
-	fmt.Println(string(data))
+	Flags := []cli.Flag{
+		cli.StringFlag{
+			Name:  "host",
+			Value: "octopi.local",
+		},
+	}
+
+	app.Commands = []cli.Command{
+		{
+			Name:  "auth",
+			Usage: "Supply auth api key",
+			Flags: Flags,
+			Action: func(c *cli.Context) error {
+
+				err := ioutil.WriteFile("authkey.txt", []byte(c.String("host")), 0644)
+				if err != nil {
+					panic(err)
+				}
+
+				return err
+			},
+		},
+	}
+
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
